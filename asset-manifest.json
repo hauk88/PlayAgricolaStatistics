@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/PlayAgricolaStatistics/static/css/main.073c9b0a.css",
-    "main.js": "/PlayAgricolaStatistics/static/js/main.0b4a3758.js",
-    "static/js/787.994511a4.chunk.js": "/PlayAgricolaStatistics/static/js/787.994511a4.chunk.js",
-    "static/media/logo.svg": "/PlayAgricolaStatistics/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
-    "index.html": "/PlayAgricolaStatistics/index.html",
-    "main.073c9b0a.css.map": "/PlayAgricolaStatistics/static/css/main.073c9b0a.css.map",
-    "main.0b4a3758.js.map": "/PlayAgricolaStatistics/static/js/main.0b4a3758.js.map",
-    "787.994511a4.chunk.js.map": "/PlayAgricolaStatistics/static/js/787.994511a4.chunk.js.map"
+    "main.css": "./static/css/main.073c9b0a.css",
+    "main.js": "./static/js/main.0827597e.js",
+    "static/js/787.994511a4.chunk.js": "./static/js/787.994511a4.chunk.js",
+    "static/media/logo.svg": "./static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "./index.html",
+    "main.073c9b0a.css.map": "./static/css/main.073c9b0a.css.map",
+    "main.0827597e.js.map": "./static/js/main.0827597e.js.map",
+    "787.994511a4.chunk.js.map": "./static/js/787.994511a4.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.073c9b0a.css",
-    "static/js/main.0b4a3758.js"
+    "static/js/main.0827597e.js"
   ]
 }
