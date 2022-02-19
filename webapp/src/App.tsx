@@ -4,26 +4,48 @@ import './App.css';
 import data from './data.json'
 
 function App() {
-  const idx = 3
-  
+  console.log(data)
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload. Learning gh-pages. Name of current idx = {data.name[idx]}.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <table>
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>PWR</th>
+            <th>Deck</th>
+            <th>Drafted</th>
+          </tr>
+          </thead>
+          <tbody>
+          {data.map((d,idx) => (
+            <tr key={idx}>
+              <td>{d.name}</td>
+              <td>{d.PWR}</td>
+              <td>{d.Deck}</td>
+              <td>{d.drafted}</td>
+            </tr>))}
+            </tbody>
+        </table>
       </header>
     </div>
   );
+}
+
+interface ICardProps {
+  name: string,
+  pwr: number
+}
+
+function CardData(props: ICardProps) {
+  const name = props.name;
+  const pwr = props.pwr;
+  return (
+    <div>
+      <p>{name} - {pwr}</p>
+    </div>
+  )
 }
 
 export default App;
