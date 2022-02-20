@@ -5,9 +5,26 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  width: 100%;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+
+#inner_remaining {
+  height: 100vh;   
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto 300px;
+}
+.grid-item {
+  text-align: center;
+  align-items: center;
+  align-content: center;
 }
