@@ -1,51 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import data from './data.json'
 
-function App() {
-  console.log(data)
 
+import { DataGrid } from '@material-ui/data-grid';
+
+const columns = [
+  { field: 'name', headerName: 'Name', width: 140 },
+  { field: 'Deck', headerName: 'Deck', width: 140 },
+  { field: 'ADP', headerName: 'ADP', width: 140 },
+  { field: 'PWR', headerName: 'PWR', width: 140 },
+  { field: 'dealt', headerName: 'Dealt', width: 140 },
+  { field: 'drafted', headerName: 'Drafted', width: 140 },
+  { field: 'played', headerName: 'Played', width: 140 },
+  { field: 'won', headerName: 'Won', width: 140 },
+  { field: 'play_ratio', headerName: 'Play ratio', width: 140 },
+  { field: 'win_ratio', headerName: 'Win ratio', width: 140 },
+];
+
+function App() {
+  const [selectedIdx, setSelectedIdx] = useState(0);
+  const imgUrl = process.env.PUBLIC_URL + '/img/' + data[selectedIdx].img_name + '.jpg';
   return (
-    <div className="App">
-      <header className="App-header">
-        <table>
-          <thead>
-          <tr>
-            <th>Name</th>
-            <th>PWR</th>
-            <th>Deck</th>
-            <th>Drafted</th>
-          </tr>
-          </thead>
-          <tbody>
-          {data.map((d,idx) => (
-            <tr key={idx}>
-              <td>{d.name}</td>
-              <td>{d.PWR}</td>
-              <td>{d.Deck}</td>
-              <td>{d.drafted}</td>
-            </tr>))}
-            </tbody>
-        </table>
-      </header>
+    <div style={{ height: 500, width: '80%' }}>
+      <h4>How to use DataGrid Component in ReactJS?</h4>
+      {/*@ts-ignore */}
+      <DataGrid rows={data} columns={columns} onSelectionModelChange={(v) => setSelectedIdx(v[0])} />
+      <h4>Test card {data[selectedIdx].name}</h4>
+      <img src={imgUrl} alt="Cant find image" />
     </div>
   );
-}
-
-interface ICardProps {
-  name: string,
-  pwr: number
-}
-
-function CardData(props: ICardProps) {
-  const name = props.name;
-  const pwr = props.pwr;
-  return (
-    <div>
-      <p>{name} - {pwr}</p>
-    </div>
-  )
 }
 
 export default App;
