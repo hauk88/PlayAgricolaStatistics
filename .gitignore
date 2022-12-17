@@ -72,8 +72,5 @@ venv/
 *~
 ~*
 
-# Published (compiled) projects:
-pub*/
-
 # Temporary folders
 tmp*/

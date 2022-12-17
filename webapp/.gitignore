@@ -11,6 +11,9 @@
 # production
 /build
 
+# images. Download using python scrips in ../create_files_for_webapp.py
+/public/img/
+
 # misc
 .DS_Store
 .env.local
