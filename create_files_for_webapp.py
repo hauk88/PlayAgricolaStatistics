@@ -12,10 +12,15 @@ def get_dataframes():
     file="./Data/database_of_cards.dat"
     deck_df = pd.read_csv(file, sep='\t') 
 
-    return df, deck_df
+    file="./Data/bann_list.dat"
+    banned_cards = pd.read_csv(file, sep='\t')
 
-def create_json(df,deck_df):
+    return df, deck_df, banned_cards
+
+def create_json(df,deck_df, bann_df):
+    df["name"] = df["name"].str.lower()
     df = pd.merge(df, deck_df[['Image', 'Deck']], how='left', left_on='img_name', right_on='Image')
+    df['banned'] = df['name'].isin(bann_df['Name'])
     df = df.drop(columns=["Image"])
     df['id'] = df.index
 
@@ -66,6 +71,6 @@ def download_images(deck_df):
 
 
 if __name__ == '__main__':
-    (df, deck_df) = get_dataframes()
-    create_json(df, deck_df)
+    (df, deck_df, bann_df) = get_dataframes()       
+    create_json(df, deck_df, bann_df)
     #download_images(deck_df)
