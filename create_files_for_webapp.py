@@ -1,4 +1,5 @@
 import os
+import shutil
 from create_pwr_table import *
 import random as rn
 import requests
@@ -20,16 +21,23 @@ def get_globus_name(files):
     files = [f.lower() for f in files]
     return files
 
-def parse_globus_deck():
+def parse_globus_deck(copy=False):
     path = r'G:\Min disk\Agricola\Decks\Globus'
     oc_path = path + r'\ocs'
     minor_path = path + r'\minors'
 
     oc_files = os.listdir(oc_path)
-    files = get_globus_name(oc_files)
     minor_files = os.listdir(minor_path)
-    files.extend(get_globus_name(minor_files))
 
+    files = []
+    source_paths = []
+    for f in oc_files:
+        files.append(f)
+        source_paths.append(oc_path + '\\' + f)
+    for f in minor_files:
+        files.append(f)
+        source_paths.append(minor_path + '\\' + f)
+    names = get_globus_name(files)
     path = "./Data/globus_to_database.dat"
     # read file to dictionary line by line
     globus_to_database = {}
@@ -40,9 +48,20 @@ def parse_globus_deck():
             line = line.split(' ')
             globus_to_database[line[0]] = line[1]
     
-    files = [globus_to_database[f].lower() if f in globus_to_database else f for f in files]
-
-    df = pd.DataFrame(files, columns=['name'])
+    names = [globus_to_database[f].lower() if f in globus_to_database else f for f in names]
+    
+    img_names = []
+    download_path = "./webapp/public/img/"
+    for i in range(len(names)):
+        name = names[i]
+        source_path = source_paths[i]
+        img_name = 'globus_' + name + ".png"
+        img_names.append(img_name)
+        if copy:
+            target_path = download_path + img_name
+            shutil.copyfile(source_path, target_path)
+    
+    df = pd.DataFrame(data={'name': names, 'image': img_names})
     return df
 
 
@@ -58,10 +77,14 @@ def get_dataframes():
 
     return df, deck_df, banned_cards
 
-def create_json(df,deck_df, bann_df):
+def create_json(df,deck_df, bann_df, globus_df):
     df = pd.merge(df, deck_df[['Image', 'Deck']], how='left', left_on='img_name', right_on='Image')
-    df['banned'] = df['name'].isin(bann_df['Name'])
     df = df.drop(columns=["Image"])
+    df = pd.merge(df, globus_df[['name', 'image']], how='outer', left_on='name', right_on='name')
+    # rename columns
+    df = df.rename(columns={'image': 'alt_image'})
+
+    df['banned'] = df['name'].isin(bann_df['Name'])
     df['id'] = df.index
 
     json_str = df.to_json(orient='records')
@@ -114,11 +137,11 @@ if __name__ == '__main__':
     (df, deck_df, bann_df) = get_dataframes()
     df["name"] = df["name"].str.lower()
 
-    globus_df = parse_globus_deck()
+    globus_df = parse_globus_deck(copy=False)
     for i in range(globus_df.shape[0]):
         row = globus_df.iloc[i]
         if not row['name'] in df["name"].values:
             print(row['name'])
             continue
-    #create_json(df, deck_df, bann_df)
+    create_json(df, deck_df, bann_df, globus_df)
     #download_images(deck_df)
