@@ -1,8 +1,49 @@
+import os
 from create_pwr_table import *
 import random as rn
 import requests
 import pandas as pd
+import re
 from time import sleep
+
+def get_globus_name(files):
+    files = [f for f in files if f.endswith('.png')]
+    # remove the .png ending
+    files = [f[:-4] for f in files]
+    # strip all whitespace
+    files = [f.replace(" ", "") for f in files]
+    # remove special characters
+    files = [f.replace("'", "") for f in files]
+    # remove numerical characters
+    files = [re.sub(r'[0-9]+', '', f) for f in files]
+    # lowercase all
+    files = [f.lower() for f in files]
+    return files
+
+def parse_globus_deck():
+    path = r'G:\Min disk\Agricola\Decks\Globus'
+    oc_path = path + r'\ocs'
+    minor_path = path + r'\minors'
+
+    oc_files = os.listdir(oc_path)
+    files = get_globus_name(oc_files)
+    minor_files = os.listdir(minor_path)
+    files.extend(get_globus_name(minor_files))
+
+    path = "./Data/globus_to_database.dat"
+    # read file to dictionary line by line
+    globus_to_database = {}
+    with open(path) as f:
+        lines = f.readlines()
+        for line in lines:
+            line = line.strip()
+            line = line.split(' ')
+            globus_to_database[line[0]] = line[1]
+    
+    files = [globus_to_database[f].lower() if f in globus_to_database else f for f in files]
+
+    df = pd.DataFrame(files, columns=['name'])
+    return df
 
 
 def get_dataframes():
@@ -18,7 +59,6 @@ def get_dataframes():
     return df, deck_df, banned_cards
 
 def create_json(df,deck_df, bann_df):
-    df["name"] = df["name"].str.lower()
     df = pd.merge(df, deck_df[['Image', 'Deck']], how='left', left_on='img_name', right_on='Image')
     df['banned'] = df['name'].isin(bann_df['Name'])
     df = df.drop(columns=["Image"])
@@ -71,6 +111,14 @@ def download_images(deck_df):
 
 
 if __name__ == '__main__':
-    (df, deck_df, bann_df) = get_dataframes()       
-    create_json(df, deck_df, bann_df)
+    (df, deck_df, bann_df) = get_dataframes()
+    df["name"] = df["name"].str.lower()
+
+    globus_df = parse_globus_deck()
+    for i in range(globus_df.shape[0]):
+        row = globus_df.iloc[i]
+        if not row['name'] in df["name"].values:
+            print(row['name'])
+            continue
+    #create_json(df, deck_df, bann_df)
     #download_images(deck_df)
