@@ -3,6 +3,7 @@ import data from "./data.json";
 
 import { DataGrid } from "@material-ui/data-grid";
 import CardView from "./CardView";
+import { useSearchParams } from "react-router-dom";
 
 const columns = [
   { field: "name", headerName: "Name", width: 140 },
@@ -19,8 +20,10 @@ const columns = [
 ];
 
 function App() {
-  const [selectedIdx, setSelectedIdx] = useState(0);
-  const [useAlt, setUseAlt] = useState(true);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const selectedIdx = parseInt(searchParams.get("card") ?? "0", 0);
+  const useAlt = searchParams.get("alt") !== "false";
   const selectedCard = data[selectedIdx];
   return (
     <div className="grid-container">
@@ -29,7 +32,12 @@ function App() {
           rows={data}
           columns={columns}
           /* @ts-ignore */
-          onSelectionModelChange={(v) => setSelectedIdx(v[0])}
+          onSelectionModelChange={(v) =>
+            setSearchParams((params) => {
+              params.set("card", `${v[0]}`);
+              return params;
+            })
+          }
         />
       </div>
       <div className="grid-item">
@@ -38,7 +46,12 @@ function App() {
           <input
             type="checkbox"
             checked={useAlt}
-            onChange={() => setUseAlt(!useAlt)}
+            onChange={() =>
+              setSearchParams((params) => {
+                params.set("alt", `${!useAlt}`);
+                return params;
+              })
+            }
           />
         </div>
         <CardView card={selectedCard} preferAlt={useAlt} />
