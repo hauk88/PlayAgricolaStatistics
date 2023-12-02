@@ -22,19 +22,22 @@ const columns = [
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const selectedIdx = parseInt(searchParams.get("card") ?? "0", 0);
+  const selectedName = searchParams.get("card") ?? "";
   const useAlt = searchParams.get("alt") !== "false";
-  const selectedCard = data[selectedIdx];
+
+  const selectedCard = data.find((c) => c.name === selectedName) ?? data[0];
   return (
     <div className="grid-container">
       <div className="grid-item" id="inner_remaining">
         <DataGrid
           rows={data}
           columns={columns}
-          /* @ts-ignore */
           onSelectionModelChange={(v) =>
             setSearchParams((params) => {
-              params.set("card", `${v[0]}`);
+              const idx = v[0];
+              // @ts-ignore
+              const name = data[idx].name;
+              params.set("card", name);
               return params;
             })
           }
