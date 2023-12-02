@@ -12,6 +12,6 @@ export type CardData = {
   PWR_no_log: number | null;
   PWR_normalized: number | null;
   Deck: string | null;
-  id: number | null;
+  id: number;
   alt_image: string | null;
 };

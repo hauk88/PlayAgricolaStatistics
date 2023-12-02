@@ -20,8 +20,8 @@ const columns = [
 
 function App() {
   const [selectedIdx, setSelectedIdx] = useState(0);
+  const [useAlt, setUseAlt] = useState(true);
   const selectedCard = data[selectedIdx];
-  console.log(selectedCard);
   return (
     <div className="grid-container">
       <div className="grid-item" id="inner_remaining">
@@ -32,7 +32,17 @@ function App() {
           onSelectionModelChange={(v) => setSelectedIdx(v[0])}
         />
       </div>
-      <CardView card={selectedCard} />
+      <div className="grid-item">
+        <div>
+          <label>Show globus card if available</label>
+          <input
+            type="checkbox"
+            checked={useAlt}
+            onChange={() => setUseAlt(!useAlt)}
+          />
+        </div>
+        <CardView card={selectedCard} preferAlt={useAlt} />
+      </div>
     </div>
   );
 }
