@@ -22,10 +22,9 @@ const columns = [
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const selectedName = searchParams.get("card") ?? "";
+  const selectedIdx = parseInt(searchParams.get("card") ?? "0", 0);
   const useAlt = searchParams.get("alt") !== "false";
-
-  const selectedCard = data.find((c) => c.name === selectedName) ?? data[0];
+  const selectedCard = data[selectedIdx];
   return (
     <div className="grid-container">
       <div className="grid-item" id="inner_remaining">
@@ -35,9 +34,7 @@ function App() {
           onSelectionModelChange={(v) =>
             setSearchParams((params) => {
               const idx = v[0];
-              // @ts-ignore
-              const name = data[idx].name;
-              params.set("card", name);
+              params.set("card", idx.toString());
               return params;
             })
           }

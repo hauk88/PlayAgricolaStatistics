@@ -1,5 +1,6 @@
 export type CardData = {
   name: string;
+  image: string;
   img_name: string | null;
   dealt: number | null;
   drafted: number | null;

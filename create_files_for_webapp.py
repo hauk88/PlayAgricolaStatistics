@@ -88,6 +88,10 @@ def create_json(df,deck_df, bann_df, globus_df):
     df = pd.merge(df, globus_df[['name', 'image']], how='outer', left_on='name', right_on='name')
     # rename columns
     df = df.rename(columns={'image': 'alt_image'})
+    # add image extension
+    df['image'] = df['img_name'] + ".jpg"
+    # set image to alt_image if image is null
+    df['image'] = df['image'].fillna(df['alt_image'])
 
     df['banned'] = df['name'].isin(bann_df['Name'])
     df['id'] = df.index
@@ -142,6 +146,6 @@ if __name__ == '__main__':
     (df, deck_df, bann_df) = get_dataframes()
     df["name"] = df["name"].str.lower()
 
-    globus_df = parse_globus_deck(copy=True)
+    globus_df = parse_globus_deck(copy=False)
     create_json(df, deck_df, bann_df, globus_df)
     #download_images(deck_df)
