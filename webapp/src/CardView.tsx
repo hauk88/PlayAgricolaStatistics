@@ -1,16 +1,17 @@
-import { CardData } from "./types"
+import { CardData } from "./types";
 
-type CardProps={
-    card: CardData
-}
-
+type CardProps = {
+  card: CardData;
+};
 
 const CardView = ({ card }: CardProps) => {
-    const url = process.env.PUBLIC_URL + '/img/' + card.img_name + '.jpg';
-    return (
+  const img = card.alt_image ?? card.img_name + ".jpg";
+  const url = process.env.PUBLIC_URL + "/img/" + img;
+  return (
     <div className="grid-item">
-        <img src={url} alt="Cant find image" />
-    </div>)
-}
+      <img src={url} alt="Cant find image" />
+    </div>
+  );
+};
 
-export default CardView
+export default CardView;

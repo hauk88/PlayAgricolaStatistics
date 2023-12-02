@@ -21,6 +21,7 @@ const columns = [
 function App() {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const selectedCard = data[selectedIdx];
+  console.log(selectedCard);
   return (
     <div className="grid-container">
       <div className="grid-item" id="inner_remaining">

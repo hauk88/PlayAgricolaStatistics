@@ -22,7 +22,7 @@ def get_globus_name(files):
     return files
 
 def parse_globus_deck(copy=False):
-    path = r'G:\Min disk\Agricola\Decks\Globus'
+    path = r'D:\Min disk\Agricola\Decks\Globus'
     oc_path = path + r'\ocs'
     minor_path = path + r'\minors'
 
@@ -32,11 +32,16 @@ def parse_globus_deck(copy=False):
     files = []
     source_paths = []
     for f in oc_files:
+        if not f.endswith('.png'):
+            continue
         files.append(f)
         source_paths.append(oc_path + '\\' + f)
     for f in minor_files:
+        if not f.endswith('.png'):
+            continue
         files.append(f)
         source_paths.append(minor_path + '\\' + f)
+    
     names = get_globus_name(files)
     path = "./Data/globus_to_database.dat"
     # read file to dictionary line by line
@@ -137,11 +142,6 @@ if __name__ == '__main__':
     (df, deck_df, bann_df) = get_dataframes()
     df["name"] = df["name"].str.lower()
 
-    globus_df = parse_globus_deck(copy=False)
-    for i in range(globus_df.shape[0]):
-        row = globus_df.iloc[i]
-        if not row['name'] in df["name"].values:
-            print(row['name'])
-            continue
+    globus_df = parse_globus_deck(copy=True)
     create_json(df, deck_df, bann_df, globus_df)
     #download_images(deck_df)
