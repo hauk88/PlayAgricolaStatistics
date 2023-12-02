@@ -9,7 +9,7 @@ const CardView = ({ card }: CardProps) => {
   const url = process.env.PUBLIC_URL + "/img/" + img;
   return (
     <div className="grid-item">
-      <img src={url} alt="Cant find image" />
+      <img src={url} alt="Cant find" width="229px" height="357px" />
     </div>
   );
 };
