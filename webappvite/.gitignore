@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# images. Download using python scrips in ../create_files_for_webapp.py
+/public/img/

@@ -1,35 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// import { useState } from "react";
+import data from "./data.json";
+
+import { DataGrid } from "@mui/x-data-grid";
+import CardView from "./CardView";
+import { useSearchParams } from "react-router-dom";
+
+const columns = [
+  { field: "name", headerName: "Name", width: 140 },
+  { field: "Deck", headerName: "Deck", width: 140 },
+  { field: "banned", headerName: "Banned", width: 140 },
+  { field: "ADP", headerName: "ADP", width: 140 },
+  { field: "PWR", headerName: "PWR", width: 140 },
+  { field: "dealt", headerName: "Dealt", width: 140 },
+  { field: "drafted", headerName: "Drafted", width: 140 },
+  { field: "played", headerName: "Played", width: 140 },
+  { field: "won", headerName: "Won", width: 140 },
+  { field: "play_ratio", headerName: "Play ratio", width: 140 },
+  { field: "win_ratio", headerName: "Win ratio", width: 140 },
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  const selectedIdx = parseInt(searchParams.get("card") ?? "0", 0);
+  const useAlt = searchParams.get("alt") !== "false";
+  const selectedCard = data[selectedIdx];
+  console.log(data);
+  console.log(selectedCard);
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="grid-container">
+      <div className="grid-item" id="inner_remaining">
+        <DataGrid
+          rows={data}
+          columns={columns}
+          onRowSelectionModelChange={(v) =>
+            setSearchParams((params) => {
+              const idx = v[0];
+              params.set("card", idx.toString());
+              return params;
+            })
+          }
+        />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div className="grid-item">
+        <div>
+          <label>Show globus card if available</label>
+          <input
+            type="checkbox"
+            checked={useAlt}
+            onChange={() =>
+              setSearchParams((params) => {
+                params.set("alt", `${!useAlt}`);
+                return params;
+              })
+            }
+          />
+        </div>
+        <CardView card={selectedCard} preferAlt={useAlt} />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
