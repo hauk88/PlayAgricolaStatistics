@@ -25,11 +25,9 @@ function App() {
   const selectedIdx = parseInt(searchParams.get("card") ?? "0", 0);
   const useAlt = searchParams.get("alt") !== "false";
   const selectedCard = data[selectedIdx];
-  console.log(data);
-  console.log(selectedCard);
   return (
     <div className="grid-container">
-      <div className="grid-item" id="inner_remaining">
+      <div className="grid-item">
         <DataGrid
           rows={data}
           columns={columns}
@@ -43,20 +41,22 @@ function App() {
         />
       </div>
       <div className="grid-item">
-        <div>
-          <label>Show globus card if available</label>
-          <input
-            type="checkbox"
-            checked={useAlt}
-            onChange={() =>
-              setSearchParams((params) => {
-                params.set("alt", `${!useAlt}`);
-                return params;
-              })
-            }
-          />
+        <div className="card-container">
+          <div>
+            <label>Show globus card if available</label>
+            <input
+              type="checkbox"
+              checked={useAlt}
+              onChange={() =>
+                setSearchParams((params) => {
+                  params.set("alt", `${!useAlt}`);
+                  return params;
+                })
+              }
+            />
+          </div>
+          <CardView card={selectedCard} preferAlt={useAlt} />
         </div>
-        <CardView card={selectedCard} preferAlt={useAlt} />
       </div>
     </div>
   );
