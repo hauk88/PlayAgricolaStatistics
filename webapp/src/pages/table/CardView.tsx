@@ -1,4 +1,4 @@
-import { CardData } from "./types";
+import { CardData } from "../../types";
 
 type CardProps = {
   preferAlt?: boolean;

@@ -1,7 +1,7 @@
 import { DataGrid } from "@mui/x-data-grid";
 import CardView from "./CardView";
 import { useSearchParams } from "react-router-dom";
-import { useStats } from "./hooks";
+import { useStats } from "../../hooks";
 
 const columns = [
   { field: "name", headerName: "Name", width: 140 },
@@ -17,7 +17,7 @@ const columns = [
   { field: "win_ratio", headerName: "Win ratio", width: 140 },
 ];
 
-function App() {
+function Table() {
   const [searchParams, setSearchParams] = useSearchParams();
   const data = useStats();
 
@@ -63,4 +63,4 @@ function App() {
   );
 }
 
-export default App;
+export default Table;
