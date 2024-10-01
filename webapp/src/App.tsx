@@ -1,7 +1,7 @@
-import { useState } from "react";
+// import { useState } from "react";
 import data from "./data.json";
 
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import CardView from "./CardView";
 import { useSearchParams } from "react-router-dom";
 
@@ -27,11 +27,11 @@ function App() {
   const selectedCard = data[selectedIdx];
   return (
     <div className="grid-container">
-      <div className="grid-item" id="inner_remaining">
+      <div className="grid-item">
         <DataGrid
           rows={data}
           columns={columns}
-          onSelectionModelChange={(v) =>
+          onRowSelectionModelChange={(v) =>
             setSearchParams((params) => {
               const idx = v[0];
               params.set("card", idx.toString());
@@ -41,20 +41,22 @@ function App() {
         />
       </div>
       <div className="grid-item">
-        <div>
-          <label>Show globus card if available</label>
-          <input
-            type="checkbox"
-            checked={useAlt}
-            onChange={() =>
-              setSearchParams((params) => {
-                params.set("alt", `${!useAlt}`);
-                return params;
-              })
-            }
-          />
+        <div className="card-container">
+          <div>
+            <label>Show globus card if available</label>
+            <input
+              type="checkbox"
+              checked={useAlt}
+              onChange={() =>
+                setSearchParams((params) => {
+                  params.set("alt", `${!useAlt}`);
+                  return params;
+                })
+              }
+            />
+          </div>
+          <CardView card={selectedCard} preferAlt={useAlt} />
         </div>
-        <CardView card={selectedCard} preferAlt={useAlt} />
       </div>
     </div>
   );
