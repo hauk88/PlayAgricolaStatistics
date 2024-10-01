@@ -25,3 +25,6 @@ dist-ssr
 
 # images. Download using python scrips in ../create_files_for_webapp.py
 /public/img/
+
+tsconfig.app.tsbuildinfo
+tsconfig.node.tsbuildinfo
