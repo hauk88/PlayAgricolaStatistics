@@ -1,9 +1,7 @@
-// import { useState } from "react";
-import data from "./data.json";
-
 import { DataGrid } from "@mui/x-data-grid";
 import CardView from "./CardView";
 import { useSearchParams } from "react-router-dom";
+import { useStats } from "./hooks";
 
 const columns = [
   { field: "name", headerName: "Name", width: 140 },
@@ -21,6 +19,7 @@ const columns = [
 
 function App() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const data = useStats();
 
   const selectedIdx = parseInt(searchParams.get("card") ?? "0", 0);
   const useAlt = searchParams.get("alt") !== "false";
@@ -41,22 +40,24 @@ function App() {
         />
       </div>
       <div className="grid-item">
-        <div className="card-container">
-          <div>
-            <label>Show globus card if available</label>
-            <input
-              type="checkbox"
-              checked={useAlt}
-              onChange={() =>
-                setSearchParams((params) => {
-                  params.set("alt", `${!useAlt}`);
-                  return params;
-                })
-              }
-            />
+        {selectedCard !== undefined && (
+          <div className="card-container">
+            <div>
+              <label>Show globus card if available</label>
+              <input
+                type="checkbox"
+                checked={useAlt}
+                onChange={() =>
+                  setSearchParams((params) => {
+                    params.set("alt", `${!useAlt}`);
+                    return params;
+                  })
+                }
+              />
+            </div>
+            <CardView card={selectedCard} preferAlt={useAlt} />
           </div>
-          <CardView card={selectedCard} preferAlt={useAlt} />
-        </div>
+        )}
       </div>
     </div>
   );
