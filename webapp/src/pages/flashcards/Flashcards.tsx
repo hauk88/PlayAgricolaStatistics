@@ -63,16 +63,14 @@ const FlashcardsGame = ({ data }: FlashcardsGameProps) => {
   const winner =
     cards[findMax(cards.map((i) => data[i].PWR).filter((v) => v !== null))];
 
+  const reset = () => {
+    setReveil(false);
+    const newCards = getRandomCards(data);
+    setCards(newCards);
+    setSelected(newCards.length);
+  };
   return (
     <div>
-      <button
-        onClick={() => {
-          setReveil(false);
-          setCards(getRandomCards(data));
-        }}
-      >
-        Refresh
-      </button>
       <div className="flash-cards-container">
         {cards.map((i) => {
           const url =
@@ -83,7 +81,9 @@ const FlashcardsGame = ({ data }: FlashcardsGameProps) => {
             <div className="flash-card-container" key={url + i}>
               <img
                 onClick={() => {
-                  if (selected === i) {
+                  if (reveil) {
+                    reset();
+                  } else if (selected === i) {
                     setReveil(true);
                   } else {
                     setSelected(i);
