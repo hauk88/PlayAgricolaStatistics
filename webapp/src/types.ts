@@ -15,4 +15,5 @@ export type CardData = {
   Deck: string | null;
   id: number;
   alt_image: string | null;
+  banned: boolean;
 };

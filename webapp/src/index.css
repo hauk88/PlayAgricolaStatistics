@@ -38,3 +38,16 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.flash-cards-container {
+  display: flex;
+  flex-direction: row;
+  gap: 5px
+}
+
+.flash-card-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
