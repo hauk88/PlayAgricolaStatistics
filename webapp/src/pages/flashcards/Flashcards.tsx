@@ -37,10 +37,16 @@ const randomInt = (max: number) => {
 };
 
 const getRandomCards = (data: CardData[]) => {
+  const first = randomInt(data.length);
+  const firstCard = data[first];
+  const sameTypeIdx = data
+    .map((v, idx) => (v.Type === firstCard.Type ? idx : -1))
+    .filter((v) => v !== -1);
+
   return [
-    randomInt(data.length),
-    randomInt(data.length),
-    randomInt(data.length),
+    first,
+    sameTypeIdx[randomInt(sameTypeIdx.length)],
+    sameTypeIdx[randomInt(sameTypeIdx.length)],
   ];
 };
 

@@ -6,6 +6,7 @@ import { useStats } from "../../hooks";
 const columns = [
   { field: "name", headerName: "Name", width: 140 },
   { field: "Deck", headerName: "Deck", width: 140 },
+  { field: "Type", headerName: "Type", width: 140 },
   { field: "banned", headerName: "Banned", width: 140 },
   { field: "ADP", headerName: "ADP", width: 140 },
   { field: "PWR", headerName: "PWR", width: 140 },

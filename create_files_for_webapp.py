@@ -22,25 +22,28 @@ def get_globus_name(files):
     return files
 
 def parse_globus_deck(copy=False):
-    path = r'D:\Min disk\Agricola\Decks\Globus'
-    oc_path = path + r'\ocs'
-    minor_path = path + r'\minors'
+    path = '/mnt/g/Min disk/Agricola/Decks/Globus/Original'
+    oc_path = path + '/ocs'
+    minor_path = path + '/minors'
 
     oc_files = os.listdir(oc_path)
     minor_files = os.listdir(minor_path)
 
     files = []
     source_paths = []
+    card_types = []
     for f in oc_files:
         if not f.endswith('.png'):
             continue
         files.append(f)
         source_paths.append(oc_path + '\\' + f)
+        card_types.append("Occupation")
     for f in minor_files:
         if not f.endswith('.png'):
             continue
         files.append(f)
         source_paths.append(minor_path + '\\' + f)
+        card_types.append("MinorImprovement")
     
     names = get_globus_name(files)
     path = "./Data/globus_to_database.dat"
@@ -66,7 +69,7 @@ def parse_globus_deck(copy=False):
             target_path = download_path + img_name
             shutil.copyfile(source_path, target_path)
     
-    df = pd.DataFrame(data={'name': names, 'image': img_names})
+    df = pd.DataFrame(data={'name': names, 'image': img_names, "Type": card_types})
     return df
 
 
@@ -83,9 +86,11 @@ def get_dataframes():
     return df, deck_df, banned_cards
 
 def create_json(df,deck_df, bann_df, globus_df):
-    df = pd.merge(df, deck_df[['Image', 'Deck']], how='left', left_on='img_name', right_on='Image')
+    df = pd.merge(df, deck_df[['Image', 'Deck', 'Type']], how='left', left_on='img_name', right_on='Image')
     df = df.drop(columns=["Image"])
-    df = pd.merge(df, globus_df[['name', 'image']], how='outer', left_on='name', right_on='name')
+    df = pd.merge(df, globus_df[['name', 'image', 'Type']], how='outer', left_on='name', right_on='name')
+    df["Type"] = df["Type_x"].fillna(df["Type_y"])
+    df = df.drop(columns=["Type_x", "Type_y"])
     # rename columns
     df = df.rename(columns={'image': 'alt_image'})
     # add image extension
@@ -98,10 +103,9 @@ def create_json(df,deck_df, bann_df, globus_df):
 
     json_str = df.to_json(orient='records')
 
-    f = open("./webapp/src/data.json", 'w')
+    f = open("./webapp/public/data/stats.json", 'w')
     f.write(json_str)
     f.close()
-
 
 
 base_url1 = "http://playagricola.com/Agricola/Images/"
