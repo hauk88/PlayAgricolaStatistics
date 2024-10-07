@@ -43,11 +43,12 @@ const getRandomCards = (data: CardData[]) => {
     .map((v, idx) => (v.Type === firstCard.Type ? idx : -1))
     .filter((v) => v !== -1);
 
-  return [
-    first,
-    sameTypeIdx[randomInt(sameTypeIdx.length)],
-    sameTypeIdx[randomInt(sameTypeIdx.length)],
-  ];
+  let filteredIdx = sameTypeIdx.filter((v) => v !== first);
+  const second = filteredIdx[randomInt(filteredIdx.length)];
+
+  filteredIdx = filteredIdx.filter((v) => v !== second);
+  const third = filteredIdx[randomInt(filteredIdx.length)];
+  return [first, second, third];
 };
 
 const findMax = (values: number[]) => {
