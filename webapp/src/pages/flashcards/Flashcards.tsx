@@ -102,8 +102,15 @@ const FlashcardsGame = ({ data }: FlashcardsGameProps) => {
                 style={selected === i ? { border: "solid" } : {}}
               />
               {reveil && (
-                <p style={winner === i ? { border: "solid" } : {}}>
-                  PWR: {data[i].PWR}
+                <p
+                  style={
+                    winner === i ? { border: "solid", padding: "2px" } : {}
+                  }
+                >
+                  PWR:{" "}
+                  {data[i].PWR === null
+                    ? 0
+                    : Math.round(data[i].PWR * 100) / 100}
                 </p>
               )}
             </div>
