@@ -5,6 +5,7 @@ import random as rn
 import requests
 import pandas as pd
 import re
+from PIL import Image
 from time import sleep
 
 def get_globus_name(files):
@@ -36,13 +37,13 @@ def parse_globus_deck(copy=False):
         if not f.endswith('.png'):
             continue
         files.append(f)
-        source_paths.append(oc_path + '\\' + f)
+        source_paths.append(oc_path + '/' + f)
         card_types.append("Occupation")
     for f in minor_files:
         if not f.endswith('.png'):
             continue
         files.append(f)
-        source_paths.append(minor_path + '\\' + f)
+        source_paths.append(minor_path + '/' + f)
         card_types.append("MinorImprovement")
     
     names = get_globus_name(files)
@@ -67,7 +68,7 @@ def parse_globus_deck(copy=False):
         img_names.append(img_name)
         if copy:
             target_path = download_path + img_name
-            shutil.copyfile(source_path, target_path)
+            prep_globus_image(source_path, target_path)
     
     df = pd.DataFrame(data={'name': names, 'image': img_names, "Type": card_types})
     return df
@@ -146,10 +147,18 @@ def download_images(deck_df):
         sleep(0.1)
 
 
+def prep_globus_image(source_path, target_path):
+    im = Image.open(source_path)
+    w, h = im.size
+    n = 80
+    im = im.crop((n, n, w-n,h-n))
+    im = im.resize((229,357))
+    im.save(target_path)
+
 if __name__ == '__main__':
     (df, deck_df, bann_df) = get_dataframes()
     df["name"] = df["name"].str.lower()
 
-    globus_df = parse_globus_deck(copy=False)
+    globus_df = parse_globus_deck(copy=True)
     create_json(df, deck_df, bann_df, globus_df)
     #download_images(deck_df)
