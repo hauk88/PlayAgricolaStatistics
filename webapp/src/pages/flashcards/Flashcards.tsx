@@ -77,7 +77,7 @@ const FlashcardsGame = ({ data }: FlashcardsGameProps) => {
     setSelected(newCards.length);
   };
   return (
-    <div className="flex flex-row gap-5">
+    <div className="flex flex-row gap-1">
       {cards.map((i) => {
         const url =
           import.meta.env.BASE_URL +
