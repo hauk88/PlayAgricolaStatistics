@@ -17,7 +17,7 @@ const router = createBrowserRouter(
       element: <Flashcards />,
     },
   ],
-  { basename: import.meta.env.BASE_URL }
+  { basename: import.meta.env.BASE_URL },
 );
 
 export default router;

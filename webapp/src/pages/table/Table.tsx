@@ -26,7 +26,7 @@ function Table() {
   const useAlt = searchParams.get("alt") !== "false";
   const selectedCard = data[selectedIdx];
   return (
-    <div className="grid grid-cols-[1fr_240px] h-screen w-screen">
+    <div className="grid h-screen w-screen grid-cols-[1fr_240px]">
       <div className="h-full overflow-auto">
         <DataGrid
           rows={data}
@@ -41,7 +41,7 @@ function Table() {
         />
       </div>
       {selectedCard !== undefined && (
-        <div className="h-full flex flex-col justify-center items-center">
+        <div className="flex h-full flex-col items-center justify-center">
           <div>
             <label>Show globus card if available</label>
             <input

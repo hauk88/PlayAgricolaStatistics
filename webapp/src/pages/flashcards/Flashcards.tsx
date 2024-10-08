@@ -85,7 +85,7 @@ const FlashcardsGame = ({ data }: FlashcardsGameProps) => {
           (data[i].alt_image ?? data[i].image);
         return (
           <div
-            className="flex flex-col justify-center items-center gap-2"
+            className="flex flex-col items-center justify-center gap-2"
             key={url + i}
           >
             <img

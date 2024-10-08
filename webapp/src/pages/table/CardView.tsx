@@ -6,7 +6,7 @@ type CardProps = {
 };
 
 const CardView = ({ card, preferAlt }: CardProps) => {
-  const img = preferAlt ? card.alt_image ?? card.image : card.image;
+  const img = preferAlt ? (card.alt_image ?? card.image) : card.image;
 
   const url = import.meta.env.BASE_URL + "img/" + img;
 
