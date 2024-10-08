@@ -26,8 +26,8 @@ function Table() {
   const useAlt = searchParams.get("alt") !== "false";
   const selectedCard = data[selectedIdx];
   return (
-    <div className="grid-container">
-      <div className="grid-item">
+    <div className="grid grid-cols-[1fr_240px] h-screen w-screen">
+      <div className="h-full overflow-auto">
         <DataGrid
           rows={data}
           columns={columns}
@@ -40,26 +40,24 @@ function Table() {
           }
         />
       </div>
-      <div className="grid-item">
-        {selectedCard !== undefined && (
-          <div className="card-container">
-            <div>
-              <label>Show globus card if available</label>
-              <input
-                type="checkbox"
-                checked={useAlt}
-                onChange={() =>
-                  setSearchParams((params) => {
-                    params.set("alt", `${!useAlt}`);
-                    return params;
-                  })
-                }
-              />
-            </div>
-            <CardView card={selectedCard} preferAlt={useAlt} />
+      {selectedCard !== undefined && (
+        <div className="h-full flex flex-col justify-center items-center">
+          <div>
+            <label>Show globus card if available</label>
+            <input
+              type="checkbox"
+              checked={useAlt}
+              onChange={() =>
+                setSearchParams((params) => {
+                  params.set("alt", `${!useAlt}`);
+                  return params;
+                })
+              }
+            />
           </div>
-        )}
-      </div>
+          <CardView card={selectedCard} preferAlt={useAlt} />
+        </div>
+      )}
     </div>
   );
 }
