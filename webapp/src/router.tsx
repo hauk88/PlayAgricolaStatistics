@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Table from "./pages/table/Table";
 import Flashcards from "./pages/flashcards/Flashcards";
+import AllCards from "./pages/allcards/AllCards";
 
 const router = createBrowserRouter(
   [
@@ -15,6 +16,10 @@ const router = createBrowserRouter(
     {
       path: "/flashcards",
       element: <Flashcards />,
+    },
+    {
+      path: "/nodeck",
+      element: <AllCards />,
     },
   ],
   { basename: import.meta.env.BASE_URL },

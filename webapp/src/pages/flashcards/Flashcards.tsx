@@ -1,21 +1,7 @@
 import { useState } from "react";
 import { useStats } from "../../hooks";
 import { CardData } from "../../types";
-
-const isUsed = (card: CardData) => {
-  if (card.banned) return false;
-  const deck = card.Deck?.toLowerCase();
-  if (
-    deck === "e" ||
-    deck === "i" ||
-    deck === "k" ||
-    deck === "wm" ||
-    deck === "fr"
-  )
-    return true;
-  if (card.alt_image !== null) return true;
-  return false;
-};
+import { isUsed } from "../../cardutils";
 
 const hasStats = (card: CardData) => {
   return card.PWR !== null;
