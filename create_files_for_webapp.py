@@ -23,28 +23,30 @@ def get_globus_name(files):
     return files
 
 def parse_globus_deck(copy=False):
-    path = '/mnt/g/Min disk/Agricola/Decks/Globus/Original'
-    oc_path = path + '/ocs'
-    minor_path = path + '/minors'
-
-    oc_files = os.listdir(oc_path)
-    minor_files = os.listdir(minor_path)
-
+    paths = ['/mnt/g/Min disk/Agricola/Decks/Globus/Original', '/mnt/g/Min disk/Agricola/Decks/Globus/Minideck 1']
     files = []
     source_paths = []
     card_types = []
-    for f in oc_files:
-        if not f.endswith('.png'):
-            continue
-        files.append(f)
-        source_paths.append(oc_path + '/' + f)
-        card_types.append("Occupation")
-    for f in minor_files:
-        if not f.endswith('.png'):
-            continue
-        files.append(f)
-        source_paths.append(minor_path + '/' + f)
-        card_types.append("MinorImprovement")
+    for path in paths:
+        oc_path = path + '/ocs'
+        minor_path = path + '/minors'
+
+        oc_files = os.listdir(oc_path)
+        minor_files = os.listdir(minor_path)
+
+
+        for f in oc_files:
+            if not f.endswith('.png'):
+                continue
+            files.append(f)
+            source_paths.append(oc_path + '/' + f)
+            card_types.append("Occupation")
+        for f in minor_files:
+            if not f.endswith('.png'):
+                continue
+            files.append(f)
+            source_paths.append(minor_path + '/' + f)
+            card_types.append("MinorImprovement")
     
     names = get_globus_name(files)
     path = "./Data/globus_to_database.dat"
