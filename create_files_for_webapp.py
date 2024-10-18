@@ -27,21 +27,27 @@ def parse_globus_deck(copy=False):
     files = []
     source_paths = []
     card_types = []
-    for path in paths:
+    deck = []
+
+    for i, path in enumerate(paths):
         oc_path = path + '/ocs'
         minor_path = path + '/minors'
 
         oc_files = os.listdir(oc_path)
         minor_files = os.listdir(minor_path)
 
-
         for f in oc_files:
+            deck.append("" if i == 0 else "m1_")
+
             if not f.endswith('.png'):
                 continue
             files.append(f)
             source_paths.append(oc_path + '/' + f)
             card_types.append("Occupation")
+            
         for f in minor_files:
+            deck.append("" if i == 0 else "m1_")
+
             if not f.endswith('.png'):
                 continue
             files.append(f)
@@ -66,7 +72,7 @@ def parse_globus_deck(copy=False):
     for i in range(len(names)):
         name = names[i]
         source_path = source_paths[i]
-        img_name = 'globus_' + name + ".png"
+        img_name = 'globus_' + deck[i] + name + ".png"
         img_names.append(img_name)
         if copy:
             target_path = download_path + img_name
