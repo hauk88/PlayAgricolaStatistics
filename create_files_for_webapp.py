@@ -8,10 +8,12 @@ import re
 from PIL import Image
 from time import sleep
 
+def is_image_file(file):
+    return file.endswith('.png') or file.endswith('.jpg') or file.endswith('.jpeg')
+
 def get_globus_name(files):
-    files = [f for f in files if f.endswith('.png')]
-    # remove the .png ending
-    files = [f[:-4] for f in files]
+    # remove the image ending
+    files = [f.split('.')[0] for f in files]
     # strip all whitespace
     files = [f.replace(" ", "") for f in files]
     # remove special characters
@@ -39,7 +41,7 @@ def parse_globus_deck(copy=False):
         for f in oc_files:
             deck.append("" if i == 0 else "m1_")
 
-            if not f.endswith('.png'):
+            if not is_image_file(f):
                 continue
             files.append(f)
             source_paths.append(oc_path + '/' + f)
@@ -48,7 +50,7 @@ def parse_globus_deck(copy=False):
         for f in minor_files:
             deck.append("" if i == 0 else "m1_")
 
-            if not f.endswith('.png'):
+            if not is_image_file(f):
                 continue
             files.append(f)
             source_paths.append(minor_path + '/' + f)
