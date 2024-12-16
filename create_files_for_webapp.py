@@ -213,44 +213,91 @@ def copy_no_deck_images(df, target_path):
             shutil.copy(download_path + img, target_path + img)
 
 
-def alt_merge_df(stat_df, deck_df, globus_df, bann_df):
-    df = pd.merge(deck_df, globus_df, how="outer", left_on="Name", right_on="name")
-    df["Type"] = df["Type_x"].fillna(df["Type_y"])
-    df = df.drop(columns=["Type_x", "Type_y"])
+def alt_merge_df(
+    stat_df: pd.DataFrame,
+    deck_df: pd.DataFrame,
+    globus_df: pd.DataFrame,
+    bann_df: pd.DataFrame,
+):
+    stat_df = stat_df.rename(columns={"name": "stat_name", "img_name": "stat_image"})
 
-    # rename columns
-    df = df.rename(columns={"image": "alt_image"})
-    # add image extension
-    df["image"] = df["Image"] + ".jpg"
-    # set image to alt_image if image is null
-    df["image"] = df["image"].fillna(df["alt_image"])
-    df["Name"] = df["Name"].fillna(df["name"])
+    deck_df = deck_df.rename(
+        columns={
+            "Name": "deck_name",
+            "Type": "deck_type",
+            "Deck": "deck_deck",
+            "Image": "deck_image",
+        }
+    )
+    globus_df = globus_df.rename(
+        columns={"name": "globus_name", "image": "globus_image", "Type": "globus_type"}
+    )
+    bann_df = bann_df.rename(columns={"Name": "bann_name"})
 
-    df["banned"] = df["Name"].isin(bann_df["Name"])
-    print(sum(df["banned"]))
-    df["deck"] = df["Deck"].str.lower()
+    df = pd.merge(
+        deck_df, stat_df, how="left", left_on="deck_image", right_on="stat_image"
+    )
+
+    df["name"] = df["deck_name"].fillna(df["stat_name"])
+    df["image"] = df["deck_image"].fillna("stat_image")
+
+    df["name"] = df["name"].str.lower()
+
+    df = pd.merge(df, globus_df, how="outer", left_on="name", right_on="globus_name")
+    df["name"] = df["name"].fillna(df["globus_name"])
+    df["type"] = df["deck_type"].fillna(df["globus_type"])
+    df["alt_image"] = df["globus_image"]
+
+    df["image"] = df["deck_image"] + ".jpg"
+    df["deck"] = df["deck_deck"]
+
+    df["banned"] = df["name"].isin(bann_df["bann_name"])
+    deck = df["deck"].str.lower()
     df["is_no"] = ~df["banned"] & (
-        (df["deck"] == "e")
-        | (df["deck"] == "i")
-        | (df["deck"] == "k")
-        | (df["deck"] == "wm")
-        | (df["deck"] == "fr")
+        (deck == "e")
+        | (deck == "i")
+        | (deck == "k")
+        | (deck == "wm")
+        | (deck == "fr")
         | df["alt_image"].notna()
     )
     df["id"] = df.index
-    return df
+    return df[
+        [
+            "id",
+            "name",
+            "type",
+            "deck",
+            "image",
+            "alt_image",
+            "banned",
+            "is_no",
+            "dealt",
+            "drafted",
+            "played",
+            "won",
+            "ADP",
+            "play_ratio",
+            "win_ratio",
+            "PWR",
+            "PWR_no_log",
+            "PWR_normalized",
+        ]
+    ]
 
 
 if __name__ == "__main__":
     (stat_df, deck_df, bann_df) = get_dataframes()
     stat_df["name"] = stat_df["name"].str.lower()
 
+    deck_df = deck_df[~deck_df.duplicated(subset=["Name"])]
+
     globus_df = parse_globus_deck(copy=False)
+
     # df = merge_dataframes(df, deck_df, bann_df, globus_df)
     df = alt_merge_df(stat_df, deck_df, globus_df, bann_df)
     df = df[df["is_no"]]
     print(df)
-    print(df.shape)
 
     # copy_no_deck_images(df, "/mnt/c/Users/hauk8/Pictures/img/")
     # create_json(df)
