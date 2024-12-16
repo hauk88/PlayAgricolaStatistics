@@ -1,16 +1,15 @@
 import { useStats } from "../../hooks";
 import { CardData } from "../../types";
-import { isUsed } from "../../cardutils";
 
 const deckOrder = ["e", "i", "k", "wm", "fr"];
 
 const AllCards = () => {
   const data = useStats();
   if (data.length === 0) return <div>Loading...</div>;
-  const filterdData = data.filter((c) => isUsed(c));
+  const filterdData = data.filter((c) => c.is_no);
   filterdData.sort((a, b) => {
-    if (a.Type !== b.Type) {
-      return -a.Type.localeCompare(b.Type);
+    if (a.type !== b.type) {
+      return -a.type.localeCompare(b.type);
     }
     if (a.alt_image !== null && b.alt_image === null) {
       return 1;
@@ -18,9 +17,9 @@ const AllCards = () => {
     if (a.alt_image === null && b.alt_image !== null) {
       return -1;
     }
-    if (a.Deck !== b.Deck) {
-      const adeck = a.Deck ?? "";
-      const bdeck = b.Deck ?? "";
+    if (a.deck !== b.deck) {
+      const adeck = a.deck ?? "";
+      const bdeck = b.deck ?? "";
       return (
         deckOrder.findIndex((v) => v === adeck.toLowerCase()) -
         deckOrder.findIndex((v) => v === bdeck.toLowerCase())

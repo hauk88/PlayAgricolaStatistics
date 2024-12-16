@@ -234,9 +234,10 @@ def alt_merge_df(
     )
     bann_df = bann_df.rename(columns={"Name": "bann_name"})
 
-    df = pd.merge(
-        deck_df, stat_df, how="left", left_on="deck_image", right_on="stat_image"
-    )
+    # Remove duplicated gardners wife card
+    df = deck_df[~deck_df.duplicated(subset=["deck_name"])]
+
+    df = pd.merge(df, stat_df, how="left", left_on="deck_image", right_on="stat_image")
 
     df["name"] = df["deck_name"].fillna(df["stat_name"])
     df["image"] = df["deck_image"].fillna("stat_image")
@@ -249,6 +250,7 @@ def alt_merge_df(
     df["alt_image"] = df["globus_image"]
 
     df["image"] = df["deck_image"] + ".jpg"
+    df["image"] = df["image"].fillna(df["alt_image"])
     df["deck"] = df["deck_deck"]
 
     df["banned"] = df["name"].isin(bann_df["bann_name"])
@@ -288,17 +290,11 @@ def alt_merge_df(
 
 if __name__ == "__main__":
     (stat_df, deck_df, bann_df) = get_dataframes()
-    stat_df["name"] = stat_df["name"].str.lower()
-
-    deck_df = deck_df[~deck_df.duplicated(subset=["Name"])]
 
     globus_df = parse_globus_deck(copy=False)
-
-    # df = merge_dataframes(df, deck_df, bann_df, globus_df)
     df = alt_merge_df(stat_df, deck_df, globus_df, bann_df)
-    df = df[df["is_no"]]
     print(df)
 
     # copy_no_deck_images(df, "/mnt/c/Users/hauk8/Pictures/img/")
-    # create_json(df)
+    create_json(df)
     # download_images(deck_df)

@@ -1,7 +1,12 @@
 export type CardData = {
+  id: number;
   name: string;
+  type: string;
+  deck: string;
   image: string;
-  img_name: string | null;
+  alt_image: string | null;
+  banned: boolean;
+  is_no: boolean;
   dealt: number | null;
   drafted: number | null;
   played: number | null;
@@ -12,9 +17,4 @@ export type CardData = {
   PWR: number | null;
   PWR_no_log: number | null;
   PWR_normalized: number | null;
-  Deck: string | null;
-  Type: string;
-  id: number;
-  alt_image: string | null;
-  banned: boolean;
 };

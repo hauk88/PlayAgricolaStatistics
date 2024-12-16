@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useStats } from "../../hooks";
 import { CardData } from "../../types";
-import { isUsed } from "../../cardutils";
 
 const hasStats = (card: CardData) => {
   return card.PWR !== null;
@@ -10,7 +9,7 @@ const hasStats = (card: CardData) => {
 const Flashcards = () => {
   const data = useStats();
   if (data.length === 0) return <div>Loading...</div>;
-  const filterdData = data.filter((c) => isUsed(c) && hasStats(c));
+  const filterdData = data.filter((c) => c.is_no && hasStats(c));
   return <FlashcardsGame data={filterdData} />;
 };
 
@@ -26,7 +25,7 @@ const getRandomCards = (data: CardData[]) => {
   const first = randomInt(data.length);
   const firstCard = data[first];
   const sameTypeIdx = data
-    .map((v, idx) => (v.Type === firstCard.Type ? idx : -1))
+    .map((v, idx) => (v.type === firstCard.type ? idx : -1))
     .filter((v) => v !== -1);
 
   let filteredIdx = sameTypeIdx.filter((v) => v !== first);

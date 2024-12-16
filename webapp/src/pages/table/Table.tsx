@@ -2,19 +2,12 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import CardView from "./CardView";
 import { useSearchParams } from "react-router-dom";
 import { useStats } from "../../hooks";
-import { isUsed } from "../../cardutils";
-import { CardData } from "../../types";
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "Name", width: 140 },
-  { field: "Deck", headerName: "Deck", width: 140 },
-  { field: "Type", headerName: "Type", width: 140 },
-  {
-    field: "NO deck",
-    valueGetter: (_, card: CardData) => {
-      return isUsed(card);
-    },
-  },
+  { field: "deck", headerName: "Deck", width: 140 },
+  { field: "type", headerName: "Type", width: 140 },
+  { field: "is_no", headerName: "NO Deck", width: 140 },
   { field: "banned", headerName: "Banned", width: 140 },
   { field: "ADP", headerName: "ADP", width: 140 },
   { field: "PWR", headerName: "PWR", width: 140 },
