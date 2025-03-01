@@ -20,8 +20,6 @@ def get_globus_name(files):
     files = [f.replace(" ", "") for f in files]
     # remove special characters
     files = [f.replace("'", "") for f in files]
-    # remove numerical characters
-    files = [re.sub(r"[0-9]+", "", f) for f in files]
     # lowercase all
     files = [f.lower() for f in files]
     return files
@@ -31,7 +29,9 @@ def parse_globus_deck(copy=False):
     paths = [
         "/mnt/g/Min disk/Agricola/Decks/Globus/Original",
         "/mnt/g/Min disk/Agricola/Decks/Globus/Minideck 1",
+        "/mnt/g/Min disk/Agricola/Decks/Globus/Minideck 2",
     ]
+    prefix = ["", "m1_", "m2_"]
     files = []
     source_paths = []
     card_types = []
@@ -45,7 +45,7 @@ def parse_globus_deck(copy=False):
         minor_files = os.listdir(minor_path)
 
         for f in oc_files:
-            deck.append("" if i == 0 else "m1_")
+            deck.append(prefix[i])
 
             if not is_image_file(f):
                 continue
@@ -54,7 +54,7 @@ def parse_globus_deck(copy=False):
             card_types.append("Occupation")
 
         for f in minor_files:
-            deck.append("" if i == 0 else "m1_")
+            deck.append(prefix[i])
 
             if not is_image_file(f):
                 continue
@@ -189,8 +189,13 @@ def download_images(deck_df):
 def prep_globus_image(source_path, target_path):
     im = Image.open(source_path)
     w, h = im.size
-    n = 80
-    im = im.crop((n, n, w - n, h - n))
+
+    crop_factor = 80 / 890
+
+    n = int(w * crop_factor)
+    should_crop = n > 5 and w * h > 229 * 357
+    if should_crop:
+        im = im.crop((n, n, w - n, h - n))
     im = im.resize((229, 357))
     im.save(target_path)
 
@@ -293,7 +298,6 @@ if __name__ == "__main__":
 
     globus_df = parse_globus_deck(copy=False)
     df = alt_merge_df(stat_df, deck_df, globus_df, bann_df)
-    print(df)
 
     # copy_no_deck_images(df, "/mnt/c/Users/hauk8/Pictures/img/")
     create_json(df)
