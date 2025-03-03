@@ -293,6 +293,29 @@ def alt_merge_df(
     ]
 
 
+def add_border(im, border_size):
+    w, h = im.size
+    new_w = w + 2 * border_size
+    new_h = h + 2 * border_size
+    new_im = Image.new("RGB", (new_w, new_h), (255, 255, 255))
+    new_im.paste(im, (border_size, border_size))
+    return new_im
+
+
+def add_border_pics():
+    imgs = [
+        "/mnt/g/Min disk/Agricola/Decks/Globus/Minideck 2/ocs/Eager Student 2.jpg",
+        "/mnt/g/Min disk/Agricola/Decks/Globus/Minideck 1/ocs/Roof Topper.jpg",
+        "/mnt/g/Min disk/Agricola/Decks/Globus/Minideck 1/ocs/Early Expert.jpg",
+        "/mnt/g/Min disk/Agricola/Decks/Globus/Minideck 1/minors/Barren Field.jpg",
+        "/mnt/g/Min disk/Agricola/Decks/Globus/Minideck 1/minors/Cheese Slicer.jpg",
+    ]
+
+    for img in imgs:
+        t = add_border(Image.open(img), 150)
+        t.save(img)
+
+
 if __name__ == "__main__":
     (stat_df, deck_df, bann_df) = get_dataframes()
 
