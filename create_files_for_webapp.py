@@ -102,7 +102,42 @@ def get_dataframes():
     file = "./Data/bann_list.dat"
     banned_cards = pd.read_csv(file, sep="\t")
 
-    return df, deck_df, banned_cards
+    file = "./Data/pa_stats_2024.csv"
+    updated_stats = pd.read_csv(file)
+    updated_stats = normalize_updated_stats(updated_stats)
+
+    return df, deck_df, banned_cards, updated_stats
+
+
+def normalize_updated_stats(df: pd.DataFrame) -> pd.DataFrame:
+    updated = df.copy()
+    updated["card_name"] = updated["card_name"].str.strip()
+    updated["card_name"] = updated["card_name"].str.lower()
+    updated["card_name"] = updated["card_name"].str.replace(" ", "")
+    updated["card_name"] = updated["card_name"].str.replace("'", "")
+    updated["card_name"] = updated["card_name"].str.replace("-", "")
+    updated["card_name"] = updated["card_name"].str.replace(",", "")
+
+    manual_mapping = {
+        "present": "presemt",
+        "animalhusbandryworker": "animalhusbandryworke",
+        "muddybog": "muddybog2",
+        "parkcemetary": "parkcemetery",
+        "gypsyscrock": "gypsysrock",
+        "masterfencer": "masterfencerv2",
+        "animaltamersapprentice": "animaltamersapprenti",
+        "stonehousereconstruction": "stonehousereconstruc",
+        "helpfulneighbours": "helpfulneighbors",
+        "starclassificationmeal": "starclassificationme",
+        "cabbage": "mycabbage",
+        "marketwoman": "marketwomen",
+        "engineeringapprentice": "engineeringapprentic",
+        "pepperpatch": "greenpepperpatch",
+    }
+
+    for k, v in manual_mapping.items():
+        updated.loc[updated["card_name"] == k, "card_name"] = v
+    return updated
 
 
 def merge_dataframes(df, deck_df, bann_df, globus_df):
@@ -223,6 +258,7 @@ def alt_merge_df(
     deck_df: pd.DataFrame,
     globus_df: pd.DataFrame,
     bann_df: pd.DataFrame,
+    updated_stats: pd.DataFrame,
 ):
     stat_df = stat_df.rename(columns={"name": "stat_name", "img_name": "stat_image"})
 
@@ -238,6 +274,21 @@ def alt_merge_df(
         columns={"name": "globus_name", "image": "globus_image", "Type": "globus_type"}
     )
     bann_df = bann_df.rename(columns={"Name": "bann_name"})
+
+    updated_stats = updated_stats.rename(
+        columns={
+            "card_name": "up_name",
+            "ADP": "up_ADP",
+            "PWR": "up_PWR",
+            "dealt": "up_dealt",
+            "drafted": "up_drafted",
+            "played": "up_played",
+            "won": "up_won",
+        }
+    )
+    updated_stats = updated_stats[
+        ["up_name", "up_ADP", "up_dealt", "up_drafted", "up_played", "up_won", "up_PWR"]
+    ]
 
     # Remove duplicated gardners wife card
     df = deck_df[~deck_df.duplicated(subset=["deck_name"])]
@@ -257,6 +308,17 @@ def alt_merge_df(
     df["image"] = df["deck_image"] + ".jpg"
     df["image"] = df["image"].fillna(df["alt_image"])
     df["deck"] = df["deck_deck"]
+
+    df = pd.merge(
+        df,
+        updated_stats,
+        how="left",
+        left_on="name",
+        right_on="up_name",
+    )
+
+    df["PWR"] = df["PWR"].round(2)
+    df["ADP"] = df["ADP"].round(2)
 
     df["banned"] = df["name"].isin(bann_df["bann_name"])
     deck = df["deck"].str.lower()
@@ -289,6 +351,12 @@ def alt_merge_df(
             "PWR",
             "PWR_no_log",
             "PWR_normalized",
+            "up_ADP",
+            "up_dealt",
+            "up_drafted",
+            "up_played",
+            "up_won",
+            "up_PWR",
         ]
     ]
 
@@ -317,10 +385,10 @@ def add_border_pics():
 
 
 if __name__ == "__main__":
-    (stat_df, deck_df, bann_df) = get_dataframes()
+    (stat_df, deck_df, bann_df, updated_stats) = get_dataframes()
 
     globus_df = parse_globus_deck(copy=False)
-    df = alt_merge_df(stat_df, deck_df, globus_df, bann_df)
+    df = alt_merge_df(stat_df, deck_df, globus_df, bann_df, updated_stats)
 
     # copy_no_deck_images(df, "/mnt/c/Users/hauk8/Pictures/img/")
     create_json(df)

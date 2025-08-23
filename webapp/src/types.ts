@@ -17,4 +17,10 @@ export type CardData = {
   PWR: number | null;
   PWR_no_log: number | null;
   PWR_normalized: number | null;
+  up_ADP: number | null;
+  up_dealt: number | null;
+  up_drafted: number | null;
+  up_played: number | null;
+  up_won: number | null;
+  up_PWR: number | null;
 };
