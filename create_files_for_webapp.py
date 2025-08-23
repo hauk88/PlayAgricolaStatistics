@@ -320,6 +320,9 @@ def alt_merge_df(
     df["PWR"] = df["PWR"].round(2)
     df["ADP"] = df["ADP"].round(2)
 
+    df.loc[df["PWR"] == 0, "PWR"] = np.nan
+    df.loc[df["ADP"] == 0, "ADP"] = np.nan
+
     df["banned"] = df["name"].isin(bann_df["bann_name"])
     deck = df["deck"].str.lower()
     df["is_no"] = ~df["banned"] & (
